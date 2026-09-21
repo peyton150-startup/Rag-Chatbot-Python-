@@ -1,11 +1,14 @@
+import os
+
 import streamlit as st
 
-from langchain_community.llms import Ollama
-from langchain_community.embeddings import OllamaEmbeddings
 from langchain_community.vectorstores import Chroma
 
 from langchain.chains import ConversationalRetrievalChain
 from langchain.memory import ConversationBufferMemory
+
+from nvidia_chat import create_nvidia_chat_model
+from nvidia_embeddings import NVIDIAOpenAIEmbeddings
 
 
 # --------------------------------------------------
@@ -133,11 +136,20 @@ st.markdown(
 # --------------------------------------------------
 # LangChain setup
 # --------------------------------------------------
-embeddings = OllamaEmbeddings(model="nomic-embed-text")
-llm = Ollama(model="llama3")
+if not os.getenv("NVIDIA_API_KEY"):
+    st.error("Set NVIDIA_API_KEY before starting the app.")
+    st.stop()
+
+persist_directory = os.getenv("CHROMA_DB_DIR", "db_nvidia")
+if not os.path.isdir(persist_directory):
+    st.error(f"Vector database not found at '{persist_directory}'. Run `python ingest.py` first.")
+    st.stop()
+
+embeddings = NVIDIAOpenAIEmbeddings()
+llm = create_nvidia_chat_model()
 
 db = Chroma(
-    persist_directory="db",
+    persist_directory=persist_directory,
     embedding_function=embeddings
 )
 

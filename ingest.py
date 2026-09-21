@@ -1,8 +1,9 @@
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_community.embeddings import OllamaEmbeddings
 from langchain_community.vectorstores import Chroma
 import os
+
+from nvidia_embeddings import NVIDIAOpenAIEmbeddings
 
 documents = []
 
@@ -21,14 +22,19 @@ splitter = RecursiveCharacterTextSplitter(
 
 chunks = splitter.split_documents(documents)
 
-embeddings = OllamaEmbeddings(model="nomic-embed-text")
+embeddings = NVIDIAOpenAIEmbeddings()
+persist_directory = os.getenv("CHROMA_DB_DIR", "db_nvidia")
 
 db = Chroma.from_documents(
     documents=chunks,
     embedding=embeddings,
-    persist_directory="db"
+    persist_directory=persist_directory
 )
 
 db.persist()
 
-print(f"Indexed {len(chunks)} chunks from {len(set(d.metadata['source'] for d in documents))} documents.")
+print(
+    f"Indexed {len(chunks)} chunks from "
+    f"{len(set(d.metadata['source'] for d in documents))} documents "
+    f"into {persist_directory}."
+)
