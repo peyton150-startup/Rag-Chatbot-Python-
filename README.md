@@ -31,6 +31,7 @@ The document and question vectors must come from the same embedding model. The a
 | `ingest.py` | PDF loading, chunking, NVIDIA embedding, and Chroma persistence |
 | `nvidia_embeddings.py` | LangChain-compatible NVIDIA embedding adapter |
 | `nvidia_chat.py` | NVIDIA Lightning chat-model configuration |
+| `vector_store.py` | Opens the Chroma store once per Streamlit server |
 | `requirements.txt` | Reproducible Python dependencies |
 | `tests/` | Unit tests for embedding modes, batching, configuration, and key validation |
 | `data/` | Fourteen PDF knowledge-base documents |
@@ -150,6 +151,10 @@ Generate a current NVIDIA API key and confirm it has access to both model IDs li
 ### Chroma dimension error
 
 Do not point the NVIDIA app at the legacy `db/` directory. Rebuild `db_nvidia/` using the current embedding model.
+
+### `no such column: collections.config_json_str`
+
+chromadb upgrades a store written by an older version (for example, a `db_nvidia/` built with chromadb 0.4.24) the first time it is opened. Before `vector_store.py`, a second browser session could query the store before that upgrade finished. The app now opens the store once per server and makes other sessions wait. If you see this error, restart Streamlit; there is no need to rebuild the database.
 
 ### A new or edited PDF is ignored
 

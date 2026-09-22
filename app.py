@@ -2,13 +2,11 @@ import os
 
 import streamlit as st
 
-from langchain_community.vectorstores import Chroma
-
 from langchain.chains import ConversationalRetrievalChain
 from langchain.memory import ConversationBufferMemory
 
 from nvidia_chat import create_nvidia_chat_model
-from nvidia_embeddings import NVIDIAOpenAIEmbeddings
+from vector_store import load_vector_store
 
 
 # --------------------------------------------------
@@ -145,13 +143,8 @@ if not os.path.isdir(persist_directory):
     st.error(f"Vector database not found at '{persist_directory}'. Run `python ingest.py` first.")
     st.stop()
 
-embeddings = NVIDIAOpenAIEmbeddings()
 llm = create_nvidia_chat_model()
-
-db = Chroma(
-    persist_directory=persist_directory,
-    embedding_function=embeddings
-)
+db = load_vector_store(persist_directory)
 
 retriever = db.as_retriever(
     search_type="mmr",
