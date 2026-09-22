@@ -27,8 +27,8 @@ st.markdown(
     <style>
     /* App background */
     .stApp {
-        background-color: #f8f6f9;
-        color: #2b2b2b;
+        background-color: #824A9C;
+        color: #ffffff;
         font-family: "Helvetica Neue", Arial, sans-serif;
     }
 
@@ -39,19 +39,24 @@ st.markdown(
     }
 
     /* Header bar */
-    header {
-        background: #f8f6f9;
+    header[data-testid="stHeader"] {
+        background: #824A9C;
+    }
+
+    /* Page text and labels */
+    .stApp p, .stApp label {
+        color: #ffffff;
     }
 
     /* Titles */
     h1 {
-        color: #4b4453;
+        color: #ffffff;
         font-weight: 500;
         letter-spacing: 0.4px;
     }
 
-    h2, h3 {
-        color: #6a6272;
+    h2, h3, h5 {
+        color: #f3e8f7;
         font-weight: 400;
     }
 
@@ -93,15 +98,20 @@ st.markdown(
         font-size: 1rem;
     }
 
+    .answer-box, .answer-box * {
+        color: #2b2b2b;
+    }
+
     /* Expander */
-    .stExpanderHeader {
-        color: #6a6272;
+    [data-testid="stExpander"] summary,
+    [data-testid="stExpander"] summary p {
+        color: #ffffff;
     }
 
     /* Sources */
     .source-text {
         font-size: 0.85rem;
-        color: #6f6a75;
+        color: #f3e8f7;
     }
 
     /* Hide footer */
