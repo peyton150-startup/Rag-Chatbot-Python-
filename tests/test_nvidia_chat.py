@@ -27,6 +27,14 @@ class NVIDIAChatTests(unittest.TestCase):
         self.assertEqual(model.openai_api_base, "https://integrate.api.nvidia.com/v1")
         self.assertFalse(model.streaming)
 
+    def test_thinking_mode_is_turned_off(self):
+        model = self.create_chat_model(api_key="test-key")
+
+        self.assertEqual(
+            model._default_params["extra_body"],
+            {"chat_template_kwargs": {"enable_thinking": False}},
+        )
+
     def test_missing_api_key_is_rejected(self):
         with patch.dict(os.environ, {}, clear=True):
             with self.assertRaisesRegex(RuntimeError, "NVIDIA_API_KEY"):
