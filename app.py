@@ -1,4 +1,6 @@
+import base64
 import os
+from pathlib import Path
 
 import streamlit as st
 
@@ -114,11 +116,12 @@ st.markdown(
 # --------------------------------------------------
 # Logo + Header
 # --------------------------------------------------
+logo = base64.b64encode(Path(__file__).with_name("logo.svg").read_bytes()).decode()
 st.markdown(
-    """
+    f"""
     <div style="text-align:center; margin-bottom:1rem;">
         <img
-            src="https://harmonyaestheticswellness.com/wp-content/uploads/2023/03/cropped-HAW_Logo_PMS_BLUE.png"
+            src="data:image/svg+xml;base64,{logo}"
             style="max-width:180px;"
         />
     </div>
