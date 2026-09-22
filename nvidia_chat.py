@@ -19,5 +19,9 @@ def create_nvidia_chat_model(api_key: str | None = None) -> ChatOpenAI:
         temperature=0.2,
         max_tokens=1024,
         streaming=False,
-        model_kwargs={"top_p": 0.95},
+         model_kwargs={
+            "top_p": 0.95,
+            # Thinking mode uses up the token budget and can leak into answers.
+            "extra_body": {"chat_template_kwargs": {"enable_thinking": False}},
+        },
     )
